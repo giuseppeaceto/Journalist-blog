@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { ArticleBody } from "@/components/article-body";
@@ -20,8 +21,8 @@ export default async function AboutPage() {
 
   return (
     <div>
-      <section className="bg-accent-deep text-white">
-        <div className="mx-auto max-w-6xl px-5 py-12 sm:py-16">
+      <section className="bg-accent-deep pt-24 text-white sm:pt-28">
+        <div className="mx-auto max-w-6xl px-5 pb-12 pt-8 sm:pb-16 sm:pt-10">
           <p className="text-xs font-medium uppercase tracking-[0.22em] text-glow">La giornalista</p>
           <h1 className="mt-3 max-w-3xl font-display text-4xl font-semibold leading-tight tracking-tight sm:text-6xl">
             {page.title}
@@ -37,47 +38,63 @@ export default async function AboutPage() {
         <ArticleBody html={page.content} />
       </section>
 
-      <section className="border-y border-line/80 bg-white/50">
-        <div className="mx-auto max-w-6xl px-5 py-12">
-          <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
-            <div className="rounded-3xl bg-accent-deep p-6 text-white sm:p-8">
-              <p className="text-xs font-medium uppercase tracking-[0.22em] text-glow">
-                {registry.title}
-              </p>
-              <p className="mt-2 font-display text-5xl font-semibold tracking-tight">
-                {registry.year}
-              </p>
-              <blockquote className="mt-6 font-display text-xl leading-snug">
-                “{registry.quote}”
-              </blockquote>
-              <p className="mt-3 text-sm text-white/60">{registry.attribution}</p>
+      <section className="border-y border-line/80">
+        <div className="mx-auto grid max-w-6xl lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="relative overflow-hidden bg-accent px-5 py-12 text-white sm:px-8 sm:py-14">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -bottom-16 -right-10 size-64 rounded-full bg-glow/30 blur-3xl"
+            />
+            <p className="relative text-xs font-medium uppercase tracking-[0.22em] text-white/70">
+              {registry.title}
+            </p>
+            <p className="relative mt-2 font-display text-6xl font-semibold tracking-tight">
+              {registry.year}
+            </p>
+            <div className="relative mt-8 overflow-hidden bg-white/10 p-3 ring-1 ring-white/20">
+              <div className="relative aspect-[4/3] w-full">
+                <Image
+                  src={registry.image}
+                  alt={registry.imageAlt}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 420px"
+                  className="object-cover"
+                />
+              </div>
             </div>
-            <div>
-              <h2 className="font-display text-3xl font-semibold tracking-tight">Di cosa mi occupo</h2>
-              <ul className="mt-6 grid gap-4 sm:grid-cols-2">
-                {workAreas.map((area) => {
-                  const Icon = area.icon;
-                  return (
-                    <li key={area.title} className="rounded-2xl bg-card p-4 ring-1 ring-line">
-                      <span className="inline-flex size-9 items-center justify-center rounded-lg bg-glow/50 text-accent">
-                        <Icon className="size-4" aria-hidden />
-                      </span>
-                      <h3 className="mt-3 font-display text-xl font-semibold tracking-tight">
+            <blockquote className="relative mt-8 font-display text-xl leading-snug">
+              “{registry.quote}”
+            </blockquote>
+            <p className="relative mt-3 text-sm text-white/65">{registry.attribution}</p>
+          </div>
+
+          <div className="bg-white/50 px-5 py-12 sm:px-8 sm:py-14">
+            <h2 className="font-display text-3xl font-semibold tracking-tight">Di cosa mi occupo</h2>
+            <ul className="mt-6 space-y-6">
+              {workAreas.map((area) => {
+                const Icon = area.icon;
+                return (
+                  <li key={area.title} className="flex gap-4 border-t border-line pt-5 first:border-0 first:pt-0">
+                    <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-glow/50 text-accent">
+                      <Icon className="size-4" aria-hidden />
+                    </span>
+                    <div>
+                      <h3 className="font-display text-xl font-semibold tracking-tight">
                         {area.title}
                       </h3>
-                      <p className="mt-2 text-sm leading-relaxed text-muted">{area.description}</p>
-                    </li>
-                  );
-                })}
-              </ul>
-              <Link
-                href="/contatti"
-                className="mt-8 inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline"
-              >
-                Contattami
-                <ArrowRight className="size-4" />
-              </Link>
-            </div>
+                      <p className="mt-1 text-sm leading-relaxed text-muted">{area.description}</p>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+            <Link
+              href="/contatti"
+              className="mt-8 inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline"
+            >
+              Contattami
+              <ArrowRight className="size-4" />
+            </Link>
           </div>
         </div>
       </section>

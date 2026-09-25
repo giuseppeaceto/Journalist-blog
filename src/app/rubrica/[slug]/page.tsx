@@ -29,7 +29,7 @@ export default async function RubricaPage({ params, searchParams }: Props) {
   if (!result) notFound();
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-10 sm:py-14">
+    <div className="mx-auto max-w-6xl px-5 pb-10 pt-28 sm:pb-14 sm:pt-32">
       <p className="text-xs uppercase tracking-[0.22em] text-accent">Rubrica</p>
       <h1 className="mt-3 font-display text-4xl font-semibold tracking-tight sm:text-6xl">{result.category.name}</h1>
       {result.category.description ? (

@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Quote, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
+import { HomeHero } from "@/components/home-hero";
 import { PostCard } from "@/components/post-card";
+import { SpotlightFeatures } from "@/components/spotlight-features";
 import { formatDate } from "@/lib/format";
-import {
-  award,
-  book,
-  encounter,
-  registry,
-  specialtyIcons,
-  testimonials,
-  workAreas,
-} from "@/lib/site-content";
+import { specialtyIcons, workAreas } from "@/lib/site-content";
 import { specialties } from "@/lib/specialties";
 import { getCategoryBySlug, getPosts } from "@/lib/wordpress";
 
@@ -35,26 +29,10 @@ export default async function HomePage() {
 
   const [featured, ...more] = latest.posts;
   const moreStories = more.slice(0, 5);
-  const BookIcon = book.icon;
-  const AwardIcon = award.icon;
 
   return (
     <div>
-      <section className="relative overflow-hidden border-b border-line/80">
-        <div className="pointer-events-none absolute -right-16 top-8 size-64 rounded-full bg-glow/40 blur-3xl animate-float" />
-        <div className="mx-auto max-w-6xl px-5 py-14 sm:py-20">
-          <p className="animate-rise text-sm font-medium uppercase tracking-[0.22em] text-accent">
-            Blog personale
-          </p>
-          <h1 className="animate-rise mt-4 max-w-4xl font-display text-5xl font-semibold leading-[0.92] tracking-tight text-[#0b1220] sm:text-7xl">
-            Voci dal Mondo
-          </h1>
-          <p className="animate-rise-delay mt-6 max-w-2xl text-lg leading-relaxed text-muted sm:text-xl">
-            Racconti, interviste e sguardi curiosi sul mondo. Per chi ama le domande giuste, le
-            storie autentiche e le prospettive che sorprendono.
-          </p>
-        </div>
-      </section>
+      <HomeHero />
 
       {featured ? (
         <section className="mx-auto max-w-6xl px-5 py-10 sm:py-12">
@@ -196,85 +174,7 @@ export default async function HomePage() {
         </p>
       </section>
 
-      <section className="border-y border-line/80 bg-white/50">
-        <div className="mx-auto grid max-w-6xl gap-6 px-5 py-12 sm:py-16 lg:grid-cols-2">
-          <div className="rounded-3xl bg-card p-6 ring-1 ring-line sm:p-8">
-            <span className="inline-flex size-10 items-center justify-center rounded-xl bg-glow/60 text-accent">
-              <BookIcon className="size-5" aria-hidden />
-            </span>
-            <p className="mt-4 text-xs font-medium uppercase tracking-[0.22em] text-accent">
-              {book.subtitle}
-            </p>
-            <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-              {book.title}
-            </h2>
-            <p className="mt-4 leading-relaxed text-muted">{book.description}</p>
-            <a
-              href={book.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-6 inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline"
-            >
-              Scopri di più
-              <ArrowRight className="size-4" />
-            </a>
-          </div>
-          <div className="rounded-3xl bg-card p-6 ring-1 ring-line sm:p-8">
-            <span className="inline-flex size-10 items-center justify-center rounded-xl bg-glow/60 text-accent">
-              <AwardIcon className="size-5" aria-hidden />
-            </span>
-            <p className="mt-4 text-xs font-medium uppercase tracking-[0.22em] text-accent">
-              {award.label}
-            </p>
-            <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight">{award.title}</h2>
-            <p className="mt-4 leading-relaxed text-muted">{award.description}</p>
-            <a
-              href={award.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-6 inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline"
-            >
-              Leggi l’articolo
-              <ArrowRight className="size-4" />
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-5 py-12 sm:py-16">
-        <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="rounded-3xl bg-accent-deep p-6 text-white sm:p-8">
-            <p className="text-xs font-medium uppercase tracking-[0.22em] text-glow">
-              {registry.title}
-            </p>
-            <p className="mt-2 font-display text-5xl font-semibold tracking-tight">{registry.year}</p>
-            <blockquote className="mt-6 font-display text-xl leading-snug">
-              <Quote className="mb-2 size-5 text-glow" aria-hidden />
-              “{registry.quote}”
-            </blockquote>
-            <p className="mt-3 text-sm text-white/60">{registry.attribution}</p>
-          </div>
-          <div className="rounded-3xl bg-card p-6 ring-1 ring-line sm:p-8">
-            <p className="text-xs font-medium uppercase tracking-[0.22em] text-accent">
-              Incontri e persone
-            </p>
-            <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight">
-              {encounter.title}
-            </h2>
-            <p className="mt-4 leading-relaxed text-muted">{encounter.text}</p>
-            <ul className="mt-8 space-y-5">
-              {testimonials.map((item) => (
-                <li key={item.attribution} className="border-t border-line pt-5">
-                  <blockquote className="font-display text-lg leading-snug text-ink">
-                    “{item.quote}”
-                  </blockquote>
-                  <p className="mt-2 text-sm text-muted">{item.attribution}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
+      <SpotlightFeatures />
 
       <section className="border-t border-line/80 bg-accent text-white">
         <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-12 sm:flex-row sm:items-end sm:justify-between sm:py-14">

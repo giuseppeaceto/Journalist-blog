@@ -51,6 +51,8 @@ export const book = {
   description:
     "L’Intelligenza Artificiale è solo uno strumento sofisticato o rappresenta una nuova forma di intelligenza con cui l’umanità dovrà confrontarsi? Un dialogo inedito con ChatGPT sul confine tra uomo e macchina, empatia e simulazione, realtà e finzione.",
   href: "https://www.nadiaclementi.it/",
+  image: "/oltre-lumano.jpg",
+  imageAlt: "Copertina del libro Oltre l’Umano di Nadia Clementi",
   icon: BookOpen,
 };
 
@@ -60,6 +62,8 @@ export const award = {
   description:
     "Un amore in piazza di Nadia Clementi e Daniela Larentis ha vinto il Premio Antonio Semeria: un romanzo capace di emozionare e coinvolgere, tra sentimenti, passioni e destini intrecciati.",
   href: "https://www.nadiaclementi.it/",
+  image: "/premio-semeria.jpg",
+  imageAlt: "Premiazione del Premio Antonio Semeria per Un amore in piazza",
   icon: Award,
 };
 
@@ -68,6 +72,8 @@ export const registry = {
   year: "2025",
   quote: "Nadia sa come trasformare le parole in emozioni, rendendo ogni storia unica e avvincente.",
   attribution: "Carla – Lettrice",
+  image: "/tesserino-albo.jpg",
+  imageAlt: "Tesserino dell’Albo dei Giornalisti Pubblicisti",
 };
 
 export const testimonials = [
@@ -86,6 +92,8 @@ export const testimonials = [
 export const encounter = {
   title: "Ispirazione e conoscenza: una lezione da Piero Angela",
   text: "Quella volta che incontrai Piero Angela ho capito quanto sia importante l’impegno nella diffusione della conoscenza. La sua curiosità e il rispetto per la scienza mi hanno ispirata a credere ancora di più nel potere delle parole. La verità, disse, è un bene prezioso che va custodito e condiviso: ogni domanda è il primo passo verso una comprensione più profonda.",
+  image: "/piero-angela.jpg",
+  imageAlt: "Nadia Clementi con Piero Angela",
 };
 
 export const sitePaths = [

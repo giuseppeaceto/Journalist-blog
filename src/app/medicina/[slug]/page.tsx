@@ -52,7 +52,7 @@ export default async function SpecialtyPage({ params, searchParams }: Props) {
     : posts;
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-10 sm:py-14">
+    <div className="mx-auto max-w-6xl px-5 pb-10 pt-28 sm:pb-14 sm:pt-32">
       <p className="text-xs uppercase tracking-[0.22em] text-accent">Specialità</p>
       <h1 className="mt-3 font-display text-4xl font-semibold tracking-tight sm:text-6xl">{specialty.name}</h1>
       <p className="mt-4 max-w-2xl text-lg text-muted">{specialty.description}</p>

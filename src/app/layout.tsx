@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import { Outfit, Syne } from "next/font/google";
+import { Fraunces, Source_Sans_3 } from "next/font/google";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import "./globals.css";
 
-const outfit = Outfit({
-  variable: "--font-outfit",
+const sourceSans = Source_Sans_3({
+  variable: "--font-body",
   subsets: ["latin"],
 });
 
-const syne = Syne({
-  variable: "--font-syne",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
 });
 
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="it" className={`${outfit.variable} ${syne.variable} h-full antialiased`}>
+    <html lang="it" className={`${sourceSans.variable} ${fraunces.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col font-sans">
         <SiteHeader />
         <main className="flex-1">{children}</main>

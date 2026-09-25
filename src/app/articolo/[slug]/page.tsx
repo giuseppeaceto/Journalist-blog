@@ -35,7 +35,7 @@ export default async function ArticlePage({ params }: Props) {
     : [];
 
   return (
-    <article className="mx-auto max-w-3xl px-5 py-10 sm:py-14">
+    <article className="mx-auto max-w-3xl px-5 pb-10 pt-28 sm:pb-14 sm:pt-32">
       <p className="text-xs uppercase tracking-[0.18em] text-accent">
         {category ? (
           <Link href={`/rubrica/${category.slug}`} className="hover:underline">
