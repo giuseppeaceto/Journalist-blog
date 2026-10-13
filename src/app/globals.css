@@ -124,3 +124,42 @@ body {
 .article-body li {
   margin: 0.35rem 0;
 }
+
+.medical-map-pin {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #fffcf8;
+  border-radius: 9999px;
+  background: var(--accent);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--accent-deep) 25%, transparent);
+  cursor: pointer;
+  transform-origin: center bottom;
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease;
+}
+
+.medical-map-pin[data-active="true"] {
+  background: var(--accent-deep);
+  transform: scale(1.35);
+}
+
+.medical-map-popup .maplibregl-popup-content {
+  border-radius: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  font-family: var(--font-body), Georgia, serif;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  color: var(--ink);
+  box-shadow: none;
+  border: 1px solid var(--line);
+}
+
+.medical-map-popup .maplibregl-popup-content strong {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: 0.95rem;
+}
+
+.medical-map-popup .maplibregl-popup-tip {
+  border-top-color: var(--line);
+}

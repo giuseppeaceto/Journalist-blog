@@ -30,6 +30,11 @@ export function SiteFooter() {
                 Medicina
               </Link>
             </li>
+            <li>
+              <Link href="/medicina/mappa" className="hover:text-glow">
+                Mappa delle voci
+              </Link>
+            </li>
             {beyondRubrics
               .filter((item) => item.slug !== "pensieri")
               .slice(0, 4)
