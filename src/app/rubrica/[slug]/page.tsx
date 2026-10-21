@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { BackButton } from "@/components/back-button";
 import { Pagination } from "@/components/pagination";
 import { PostCard } from "@/components/post-card";
 import { getPostsByCategorySlug } from "@/lib/wordpress";
@@ -30,6 +31,7 @@ export default async function RubricaPage({ params, searchParams }: Props) {
 
   return (
     <div className="mx-auto max-w-6xl px-5 pb-10 pt-28 sm:pb-14 sm:pt-32">
+      <BackButton href="/" label="Indietro" />
       <p className="text-xs uppercase tracking-[0.22em] text-accent">Rubrica</p>
       <h1 className="mt-3 font-display text-4xl font-semibold tracking-tight sm:text-6xl">{result.category.name}</h1>
       {result.category.description ? (

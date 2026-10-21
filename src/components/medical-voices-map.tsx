@@ -18,12 +18,15 @@ type MedicalVoicesMapProps = {
   voices: MedicalVoice[];
   selectedId: string | null;
   onSelect: (id: string) => void;
+  resetViewTrigger?: number;
 };
 
-export function MedicalVoicesMap({ voices, selectedId, onSelect }: MedicalVoicesMapProps) {
+export function MedicalVoicesMap({ voices, selectedId, onSelect, resetViewTrigger }: MedicalVoicesMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMapType | null>(null);
   const markersRef = useRef<Map<string, { marker: Marker; element: HTMLButtonElement }>>(new Map());
+  const popupRef = useRef<Popup | null>(null);
+  const openPopupIdRef = useRef<string | null>(null);
   const onSelectRef = useRef(onSelect);
   const selectedIdRef = useRef(selectedId);
 
@@ -45,16 +48,30 @@ export function MedicalVoicesMap({ voices, selectedId, onSelect }: MedicalVoices
       style: STYLE_URL,
       center: [11.5, 43.8],
       zoom: 5.2,
+      // Solo l'Italia: niente copie del mondo e nessun crossfade dei tile -> meno lavoro per frame.
+      renderWorldCopies: false,
+      fadeDuration: 0,
       attributionControl: { compact: true },
     });
 
-    map.addControl(new NavigationControl({ showCompass: false }), "top-right");
+    // In basso a destra: in alto finirebbero sotto l'header fisso del sito durante lo scroll.
+    map.addControl(new NavigationControl({ showCompass: false }), "bottom-right");
     mapRef.current = map;
     const markers = markersRef.current;
 
+    const resizeObserver = new ResizeObserver(() => {
+      map.resize();
+    });
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
     return () => {
+      resizeObserver.disconnect();
       markers.forEach(({ marker }) => marker.remove());
       markers.clear();
+      popupRef.current?.remove();
+      popupRef.current = null;
       map.remove();
       mapRef.current = null;
     };
@@ -68,6 +85,8 @@ export function MedicalVoicesMap({ voices, selectedId, onSelect }: MedicalVoices
       const markers = markersRef.current;
       markers.forEach(({ marker }) => marker.remove());
       markers.clear();
+      popupRef.current?.remove();
+      openPopupIdRef.current = null;
 
       voices.forEach((voice) => {
         const el = document.createElement("button");
@@ -77,23 +96,49 @@ export function MedicalVoicesMap({ voices, selectedId, onSelect }: MedicalVoices
         if (voice.id === selectedIdRef.current) {
           el.dataset.active = "true";
         }
+        // Il pallino è un figlio: MapLibre scrive il transform sul wrapper per
+        // posizionare il marker, così lo scaling di hover/attivo resta indipendente.
+        const dot = document.createElement("span");
+        dot.className = "medical-map-pin-dot";
+        dot.setAttribute("aria-hidden", "true");
+        el.appendChild(dot);
         el.addEventListener("click", (event) => {
           event.stopPropagation();
           onSelectRef.current(voice.id);
-        });
 
-        const popup = new Popup({
-          offset: 18,
-          closeButton: false,
-          maxWidth: "240px",
-          className: "medical-map-popup",
-        }).setHTML(
-          `<strong>${escapeHtml(voice.name)}</strong><br/><span>${escapeHtml(voice.institution)} · ${escapeHtml(voice.city)}</span>`,
-        );
+          // La popup è condivisa e creata solo al primo click: evita di costruire
+          // 100+ popup DOM (e relativi nodi) che spesso non vengono mai aperti.
+          if (!popupRef.current) {
+            popupRef.current = new Popup({
+              offset: 18,
+              closeButton: false,
+              maxWidth: "240px",
+              className: "medical-map-popup",
+            });
+            map.on("click", () => {
+              popupRef.current?.remove();
+              openPopupIdRef.current = null;
+            });
+          }
+
+          // Click sullo stesso pin = chiude (come il comportamento nativo di MapLibre).
+          if (openPopupIdRef.current === voice.id) {
+            popupRef.current.remove();
+            openPopupIdRef.current = null;
+            return;
+          }
+
+          popupRef.current
+            .setLngLat([voice.lng, voice.lat])
+            .setHTML(
+              `<strong>${escapeHtml(voice.name)}</strong><br/><span>${escapeHtml(voice.institution)} · ${escapeHtml(voice.city)}</span>`,
+            )
+            .addTo(map);
+          openPopupIdRef.current = voice.id;
+        });
 
         const marker = new Marker({ element: el, anchor: "bottom" })
           .setLngLat([voice.lng, voice.lat])
-          .setPopup(popup)
           .addTo(map);
 
         markers.set(voice.id, { marker, element: el });
@@ -144,9 +189,30 @@ export function MedicalVoicesMap({ voices, selectedId, onSelect }: MedicalVoices
     });
   }, [selectedId, voices]);
 
+  useEffect(() => {
+    if (!resetViewTrigger) return;
+    const map = mapRef.current;
+    if (!map || voices.length === 0) return;
+
+    if (voices.length === 1) {
+      map.easeTo({ center: [voices[0].lng, voices[0].lat], zoom: 10, duration: 500 });
+      return;
+    }
+
+    const lngs = voices.map((v) => v.lng);
+    const lats = voices.map((v) => v.lat);
+    map.fitBounds(
+      [
+        [Math.min(...lngs), Math.min(...lats)],
+        [Math.max(...lngs), Math.max(...lats)],
+      ],
+      { padding: 70, maxZoom: 11, duration: 600 },
+    );
+  }, [resetViewTrigger, voices]);
+
   return (
-    <div className="relative h-full min-h-[320px] overflow-hidden rounded-2xl ring-1 ring-line">
-      <div ref={containerRef} className="h-full min-h-[320px] w-full" />
+    <div className="relative h-full w-full">
+      <div ref={containerRef} className="h-full w-full" />
     </div>
   );
 }

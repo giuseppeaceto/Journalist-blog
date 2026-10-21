@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArticleBody } from "@/components/article-body";
+import { BackButton } from "@/components/back-button";
 import { PostCard } from "@/components/post-card";
 import { SocialShare } from "@/components/social-share";
 import { formatDate, readingMinutes } from "@/lib/format";
@@ -37,6 +38,7 @@ export default async function ArticlePage({ params }: Props) {
 
   return (
     <article className="mx-auto max-w-3xl px-5 pb-10 pt-28 sm:pb-14 sm:pt-32">
+      <BackButton href="/" label="Indietro" />
       <p className="text-xs uppercase tracking-[0.18em] text-accent">
         {category ? (
           <Link href={`/rubrica/${category.slug}`} className="hover:underline">

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { specialtyIcons } from "@/lib/site-content";
 import { medicineRubrics, specialties } from "@/lib/specialties";
-import { MapPinned, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Medicina",
@@ -21,22 +21,7 @@ export default function MedicinaPage() {
         articoli nascono: interviste, ricerca, storie.
       </p>
 
-      <Link
-        href="/medicina/mappa"
-        className="mt-8 flex items-start gap-4 rounded-2xl bg-card p-5 ring-1 ring-line transition hover:-translate-y-0.5 hover:ring-accent/50"
-      >
-        <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-glow/50 text-accent">
-          <MapPinned className="size-4" aria-hidden />
-        </span>
-        <span>
-          <span className="font-display text-2xl font-semibold tracking-tight">Mappa delle voci</span>
-          <span className="mt-1 block text-muted">
-            Geografia editoriale dei medici e delle strutture citati nelle interviste.
-          </span>
-        </span>
-      </Link>
-
-      <section className="mt-12">
+      <section className="mt-10">
         <h2 className="font-display text-3xl font-semibold tracking-tight">Specialità</h2>
         <ul className="mt-5 grid gap-3 sm:grid-cols-2">
           {specialties.map((item) => {

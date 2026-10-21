@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
@@ -34,6 +35,13 @@ export function SiteHeader() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
+  // Among all matching nav paths, only the most specific one is active,
+  // so a parent section (e.g. /medicina) doesn't light up on a child route (/medicina/mappa).
+  const activeHref = sitePaths
+    .filter((link) => pathname === link.href || pathname.startsWith(`${link.href}/`))
+    .sort((a, b) => b.href.length - a.href.length)[0]?.href;
+  const isPathActive = (href: string) => href === activeHref;
+
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
       <div
@@ -50,10 +58,13 @@ export function SiteHeader() {
             className="group flex min-w-0 items-center gap-2.5 sm:gap-3"
           >
             <div className="relative size-8 sm:size-9 md:size-10 shrink-0 overflow-hidden rounded-full border border-black/10 bg-hero/25 ring-1.5 ring-accent/30 shadow-2xs">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/nadia-cutout.png?v=6"
+              <Image
+                src="/nadia-cutout.png"
                 alt="Nadia Clementi"
+                width={80}
+                height={80}
+                loading="eager"
+                sizes="40px"
                 className="size-full object-cover object-top"
               />
             </div>
@@ -71,8 +82,7 @@ export function SiteHeader() {
           <nav className="hidden md:flex items-center gap-1 text-sm">
             {sitePaths.map((link) => {
               const Icon = link.icon;
-              const isActive =
-                pathname === link.href || pathname.startsWith(`${link.href}/`);
+              const isActive = isPathActive(link.href);
               return (
                 <Link
                   key={link.href}
@@ -107,8 +117,7 @@ export function SiteHeader() {
           <nav className="mt-3 divide-y divide-line/60 border-t border-line/60 pt-2 md:hidden">
             {sitePaths.map((link) => {
               const Icon = link.icon;
-              const isActive =
-                pathname === link.href || pathname.startsWith(`${link.href}/`);
+              const isActive = isPathActive(link.href);
               return (
                 <Link
                   key={link.href}

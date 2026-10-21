@@ -6,6 +6,7 @@ import {
   Compass,
   Dna,
   HeartPulse,
+  MapPinned,
   Mic2,
   NotebookPen,
   PenLine,
@@ -100,6 +101,7 @@ export const encounter = {
 export const sitePaths = [
   { href: "/rubrica/pensieri", label: "Pensieri", icon: Sparkles },
   { href: "/medicina", label: "Medicina", icon: Stethoscope },
+  { href: "/medicina/mappa", label: "Mappa delle voci", icon: MapPinned },
   { href: "/chi-sono", label: "Chi sono", icon: Users },
   { href: "/contatti", label: "Contatti", icon: Mic2 },
 ] as const;

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -42,12 +43,13 @@ export function HomeHero() {
 
         {/* Ritratto a figura intera visibile su schermi desktop, nascosto su mobile */}
         <div className="relative z-10 hidden w-full justify-end pb-0 lg:flex lg:max-w-none">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/nadia-cutout.png?v=6"
+          <Image
+            src="/nadia-cutout.png"
             alt="Nadia Clementi, giornalista"
             width={1164}
             height={1104}
+            preload
+            sizes="(min-width: 1280px) 460px, 420px"
             className="relative mx-auto h-auto w-auto max-h-[440px] max-w-[420px] xl:max-w-[460px] object-contain object-bottom"
           />
         </div>
