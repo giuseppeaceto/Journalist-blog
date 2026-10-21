@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArticleBody } from "@/components/article-body";
 import { PostCard } from "@/components/post-card";
+import { SocialShare } from "@/components/social-share";
 import { formatDate, readingMinutes } from "@/lib/format";
 import { getPostBySlug, getPosts } from "@/lib/wordpress";
 
@@ -51,6 +52,8 @@ export default async function ArticlePage({ params }: Props) {
       </p>
       <h1 className="mt-4 font-display text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl">{post.title}</h1>
 
+      <SocialShare title={post.title} slug={slug} variant="bar" />
+
       {post.image ? (
         <Image
           src={post.image}
@@ -66,8 +69,10 @@ export default async function ArticlePage({ params }: Props) {
         <ArticleBody html={post.content} />
       </div>
 
+      <SocialShare title={post.title} slug={slug} variant="card" />
+
       {post.tags.length > 0 ? (
-        <ul className="mt-10 flex flex-wrap gap-2">
+        <ul className="mt-8 flex flex-wrap gap-2">
           {post.tags.slice(0, 8).map((tag) => (
             <li key={tag.id} className="border border-line px-2.5 py-1 text-xs text-muted">
               {tag.name}

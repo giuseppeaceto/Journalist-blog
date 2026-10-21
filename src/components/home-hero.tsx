@@ -13,8 +13,8 @@ export function HomeHero() {
         className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-paper to-transparent"
       />
 
-      <div className="relative mx-auto grid max-w-6xl items-end gap-6 px-5 pb-0 pt-28 sm:pt-32 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8 lg:pt-24">
-        <div className="relative z-20 max-w-xl pb-10 sm:pb-12 lg:pb-16">
+      <div className="relative mx-auto grid max-w-6xl items-end gap-6 px-5 pb-0 pt-28 sm:pt-32 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8 lg:pt-28">
+        <div className="relative z-20 max-w-xl pb-6 sm:pb-8 lg:pb-16">
           <h1 className="animate-rise font-display text-4xl font-semibold leading-[0.92] tracking-tight text-ink sm:text-5xl xl:text-6xl">
             Voci dal Mondo
           </h1>
@@ -39,14 +39,14 @@ export function HomeHero() {
           </div>
         </div>
 
-        <div className="relative z-10 mx-auto w-full max-w-md pb-2 lg:max-w-none">
+        <div className="relative z-10 mx-auto flex w-full justify-center pb-0 lg:justify-end lg:max-w-none">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/nadia-cutout.png?v=6"
             alt="Nadia Clementi, giornalista"
             width={1164}
             height={1104}
-            className="relative mx-auto h-auto w-full max-w-[480px] lg:max-w-[520px]"
+            className="relative mx-auto h-auto w-auto max-h-[250px] max-w-[250px] sm:max-h-[320px] sm:max-w-[320px] lg:max-h-[440px] lg:max-w-[420px] xl:max-w-[460px] object-contain object-bottom"
           />
         </div>
       </div>

@@ -21,7 +21,7 @@ export default async function AboutPage() {
 
   return (
     <div>
-      <section className="bg-accent-deep pt-24 text-white sm:pt-28">
+      <section className="bg-accent-deep pt-28 text-white sm:pt-32">
         <div className="mx-auto max-w-6xl px-5 pb-12 pt-8 sm:pb-16 sm:pt-10">
           <p className="text-xs font-medium uppercase tracking-[0.22em] text-glow">La giornalista</p>
           <h1 className="mt-3 max-w-3xl font-display text-4xl font-semibold leading-tight tracking-tight sm:text-6xl">
