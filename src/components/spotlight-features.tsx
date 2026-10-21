@@ -1,11 +1,49 @@
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowRight, Quote } from "lucide-react";
 import { award, book, encounter, registry, testimonials } from "@/lib/site-content";
 
 export function SpotlightFeatures() {
   return (
     <>
-      {/* Libro: stage con copertina come oggetto */}
+      {/* Premio: immagine a sinistra, testo a destra */}
+      <section className="bg-paper">
+        <div className="mx-auto max-w-6xl px-5 py-12 sm:py-16">
+          <p className="text-xs font-medium uppercase tracking-[0.22em] text-accent">
+            {award.label}
+          </p>
+          <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-center">
+            {/* Foto */}
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl shadow-lg">
+              <Image
+                src={award.image}
+                alt={award.imageAlt}
+                fill
+                sizes="(max-width: 1024px) 100vw, 560px"
+                className="object-cover object-[center_28%]"
+              />
+            </div>
+            {/* Testo */}
+            <div>
+              <h2 className="font-display text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
+                {award.title}
+              </h2>
+              <p className="mt-4 max-w-lg leading-relaxed text-muted">
+                {award.description}
+              </p>
+              <Link
+                href={award.href}
+                className="mt-6 inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-white transition hover:bg-accent-deep"
+              >
+                Leggi l&apos;articolo
+                <ArrowRight className="size-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pubblicazioni: stage con copertina come oggetto */}
       <section className="relative overflow-hidden bg-accent-deep text-white">
         <div
           aria-hidden
@@ -51,47 +89,6 @@ export function SpotlightFeatures() {
               Scopri di più
               <ArrowRight className="size-4" />
             </a>
-          </div>
-        </div>
-      </section>
-
-      {/* Premio: foto a tutta larghezza, testo in fascia sotto */}
-      <section className="bg-paper">
-        <div className="mx-auto max-w-6xl px-5 py-12 sm:py-16">
-          <div className="overflow-hidden">
-            <div className="relative aspect-[16/9] w-full sm:aspect-[21/9]">
-              <Image
-                src={award.image}
-                alt={award.imageAlt}
-                fill
-                sizes="(max-width: 1152px) 100vw, 1152px"
-                className="object-cover object-[center_28%]"
-              />
-              <div
-                aria-hidden
-                className="absolute inset-0 bg-gradient-to-t from-accent-deep/70 via-accent-deep/10 to-transparent"
-              />
-              <div className="absolute inset-x-0 bottom-0 p-5 sm:p-8 md:p-10">
-                <p className="text-xs font-medium uppercase tracking-[0.22em] text-glow">
-                  {award.label}
-                </p>
-                <h2 className="mt-2 max-w-xl font-display text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-                  {award.title}
-                </h2>
-              </div>
-            </div>
-            <div className="flex flex-col gap-4 border-x border-b border-line bg-card/80 px-5 py-6 sm:flex-row sm:items-end sm:justify-between sm:px-8 sm:py-7">
-              <p className="max-w-2xl leading-relaxed text-muted">{award.description}</p>
-              <a
-                href={award.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-accent hover:underline"
-              >
-                Leggi l’articolo
-                <ArrowRight className="size-4" />
-              </a>
-            </div>
           </div>
         </div>
       </section>

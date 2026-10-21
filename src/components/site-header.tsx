@@ -47,14 +47,24 @@ export function SiteHeader() {
           <Link
             href="/"
             onClick={() => setMobileOpen(false)}
-            className="group min-w-0"
+            className="group flex min-w-0 items-center gap-2.5 sm:gap-3"
           >
-            <p className="font-display text-xl font-semibold tracking-tight text-ink sm:text-2xl">
-              Nadia Clementi
-            </p>
-            <p className="mt-0.5 text-[10px] uppercase tracking-[0.22em] text-ink/55">
-              Giornalista
-            </p>
+            <div className="relative size-8 sm:size-9 md:size-10 shrink-0 overflow-hidden rounded-full border border-black/10 bg-hero/25 ring-1.5 ring-accent/30 shadow-2xs">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/nadia-cutout.png?v=6"
+                alt="Nadia Clementi"
+                className="size-full object-cover object-top"
+              />
+            </div>
+            <div className="min-w-0">
+              <p className="font-display text-lg font-semibold tracking-tight text-ink sm:text-2xl truncate">
+                Nadia Clementi
+              </p>
+              <p className="mt-0.5 text-[10px] uppercase tracking-[0.22em] text-ink/55">
+                Giornalista
+              </p>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}

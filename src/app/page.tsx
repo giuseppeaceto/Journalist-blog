@@ -14,7 +14,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: "Voci dal Mondo",
   description:
-    "Racconti, interviste e sguardi curiosi sul mondo. Per chi ama le domande giuste, le storie autentiche e le prospettive che sorprendono.",
+    "Dai progressi della medicina alle storie di vita quotidiana: incontri con specialisti, approfondimenti clinici e racconti sul nostro presente. Il rigore della divulgazione unito alla forza delle parole.",
 };
 
 export default async function HomePage() {
@@ -42,6 +42,53 @@ export default async function HomePage() {
           </div>
         </section>
       ) : null}
+
+      <section className="mx-auto max-w-6xl px-5 py-10 sm:py-14">
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <p className="text-xs font-medium uppercase tracking-[0.22em] text-accent">Approfondimenti</p>
+            <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight sm:text-4xl">Medicina</h2>
+            <p className="mt-2 max-w-xl text-muted">
+              Interviste ai medici, ricerca e specialità: una parte importante del lavoro, non l’unica.
+            </p>
+          </div>
+          <Link
+            href="/medicina"
+            className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-accent hover:underline"
+          >
+            Esplora
+            <ArrowRight className="size-4" />
+          </Link>
+        </div>
+        <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {specialties.slice(0, 4).map((item) => {
+            const Icon = specialtyIcons[item.slug] ?? Sparkles;
+            return (
+              <li key={item.slug}>
+                <Link
+                  href={`/medicina/${item.slug}`}
+                  className="block h-full rounded-2xl bg-card p-4 ring-1 ring-line transition hover:-translate-y-0.5 hover:ring-accent/50"
+                >
+                  <span className="inline-flex size-9 items-center justify-center rounded-lg bg-glow/50 text-accent">
+                    <Icon className="size-4" aria-hidden />
+                  </span>
+                  <p className="mt-3 font-display text-xl font-semibold tracking-tight">{item.name}</p>
+                  <p className="mt-1 text-sm leading-snug text-muted">{item.description}</p>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+        <p className="mt-5">
+          <Link
+            href="/rubrica/interviste-ai-medici"
+            className="inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline"
+          >
+            Interviste ai medici
+            <ArrowRight className="size-4" />
+          </Link>
+        </p>
+      </section>
 
       {moreStories.length > 0 ? (
         <section className="border-y border-line/80 bg-white/50">
@@ -125,53 +172,6 @@ export default async function HomePage() {
             })}
           </ul>
         </div>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-5 py-12 sm:py-16">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <p className="text-xs font-medium uppercase tracking-[0.22em] text-accent">Approfondimenti</p>
-            <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight">Medicina</h2>
-            <p className="mt-2 max-w-xl text-muted">
-              Interviste ai medici, ricerca e specialità: una parte importante del lavoro, non l’unica.
-            </p>
-          </div>
-          <Link
-            href="/medicina"
-            className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-accent hover:underline"
-          >
-            Esplora
-            <ArrowRight className="size-4" />
-          </Link>
-        </div>
-        <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {specialties.slice(0, 4).map((item) => {
-            const Icon = specialtyIcons[item.slug] ?? Sparkles;
-            return (
-              <li key={item.slug}>
-                <Link
-                  href={`/medicina/${item.slug}`}
-                  className="block h-full rounded-2xl bg-card p-4 ring-1 ring-line transition hover:-translate-y-0.5 hover:ring-accent/50"
-                >
-                  <span className="inline-flex size-9 items-center justify-center rounded-lg bg-glow/50 text-accent">
-                    <Icon className="size-4" aria-hidden />
-                  </span>
-                  <p className="mt-3 font-display text-xl font-semibold tracking-tight">{item.name}</p>
-                  <p className="mt-1 text-sm leading-snug text-muted">{item.description}</p>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-        <p className="mt-5">
-          <Link
-            href="/rubrica/interviste-ai-medici"
-            className="inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline"
-          >
-            Interviste ai medici
-            <ArrowRight className="size-4" />
-          </Link>
-        </p>
       </section>
 
       <SpotlightFeatures />

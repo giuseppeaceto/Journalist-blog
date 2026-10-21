@@ -3,6 +3,7 @@ import {
   Bone,
   BookOpen,
   Brain,
+  Compass,
   Dna,
   HeartPulse,
   Mic2,
@@ -38,10 +39,10 @@ export const workAreas: {
     icon: NotebookPen,
   },
   {
-    title: "Eventi e moderazione",
+    title: "Reportage e viaggi",
     description:
-      "Festival letterari, conferenze, radio e podcast: conduco incontri e do ritmo al dialogo, trasformando ogni evento in un’esperienza viva.",
-    icon: Users,
+      "Viaggiare con occhi curiosi e taccuino alla mano. Racconto luoghi, culture e tradizioni attraverso reportage che catturano l’anima dei territori e l’autenticità delle persone che li abitano.",
+    icon: Compass,
   },
 ];
 
@@ -61,7 +62,7 @@ export const award = {
   title: "Premiata per Un amore in piazza",
   description:
     "Un amore in piazza di Nadia Clementi e Daniela Larentis ha vinto il Premio Antonio Semeria: un romanzo capace di emozionare e coinvolgere, tra sentimenti, passioni e destini intrecciati.",
-  href: "https://www.nadiaclementi.it/",
+  href: "/articolo/daniela-larentis-e-nadia-clementi-premiate-per-il-loro-un-amore-in-piazza",
   image: "/premio-semeria.jpg",
   imageAlt: "Premiazione del Premio Antonio Semeria per Un amore in piazza",
   icon: Award,
