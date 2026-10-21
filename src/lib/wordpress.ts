@@ -141,6 +141,7 @@ export type PostQuery = {
   page?: number;
   perPage?: number;
   categories?: number;
+  tags?: number;
   search?: string;
   exclude?: number;
 };
@@ -151,6 +152,7 @@ export async function getPosts(query: PostQuery = {}) {
     page: query.page ?? 1,
     per_page: query.perPage ?? 10,
     categories: query.categories,
+    tags: query.tags,
     search: query.search,
     exclude: query.exclude,
   });
@@ -188,6 +190,59 @@ export async function getPostsByCategorySlug(slug: string, page = 1, perPage = 1
   const list = await getPosts({ categories: category.id, page, perPage });
   return { category, ...list };
 }
+
+export type TermWithCount = Term & { count: number };
+
+/** Categorie ordinate per numero di articoli: alimentano la wordcloud. */
+export const getCategories = cache(async (perPage = 24): Promise<TermWithCount[]> => {
+  const result = await wpFetch<WpTerm[]>("/categories", {
+    per_page: perPage,
+    orderby: "count",
+    order: "desc",
+    _fields: "id,name,slug,count",
+  });
+  return result.data
+    .filter((term) => (term.count ?? 0) > 0)
+    .map((term) => ({
+      id: term.id,
+      name: decodeEntities(term.name),
+      slug: term.slug,
+      count: term.count ?? 0,
+    }));
+});
+
+/**
+ * Tag più usati. Il sito ha oltre 2700 tag, ma la maggior parte compare una volta
+ * sola (e con varianti quasi duplicate): teniamo solo la testa della distribuzione.
+ */
+export const getTags = cache(async (perPage = 40, minCount = 4): Promise<TermWithCount[]> => {
+  const result = await wpFetch<WpTerm[]>("/tags", {
+    per_page: perPage,
+    orderby: "count",
+    order: "desc",
+    _fields: "id,name,slug,count",
+  });
+  return result.data
+    .filter((term) => (term.count ?? 0) >= minCount)
+    .map((term) => ({
+      id: term.id,
+      name: decodeEntities(term.name),
+      slug: term.slug,
+      count: term.count ?? 0,
+    }));
+});
+
+export const getTagBySlug = cache(async (slug: string): Promise<TermWithCount | null> => {
+  const result = await wpFetch<WpTerm[]>("/tags", { slug, _fields: "id,name,slug,count" });
+  const tag = result.data[0];
+  if (!tag) return null;
+  return {
+    id: tag.id,
+    name: decodeEntities(tag.name),
+    slug: tag.slug,
+    count: tag.count ?? 0,
+  };
+});
 
 export const getPageBySlug = cache(async (slug: string) => {
   const result = await wpFetch<WpPage[]>("/pages", { slug });

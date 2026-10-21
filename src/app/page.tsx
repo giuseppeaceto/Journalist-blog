@@ -24,7 +24,7 @@ export default async function HomePage() {
   ]);
 
   const thoughts = thoughtsCategory
-    ? await getPosts({ categories: thoughtsCategory.id, perPage: 4 })
+    ? await getPosts({ categories: thoughtsCategory.id, perPage: 6 })
     : { posts: [] };
 
   const [featured, ...more] = latest.posts;
@@ -138,7 +138,7 @@ export default async function HomePage() {
               <ArrowRight className="size-4" />
             </Link>
           </div>
-          <div className="mt-8 grid gap-5 md:grid-cols-2">
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {thoughts.posts.map((post) => (
               <PostCard key={post.id} post={post} />
             ))}

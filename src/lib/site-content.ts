@@ -8,6 +8,7 @@ import {
   HeartPulse,
   MapPinned,
   Mic2,
+  Newspaper,
   NotebookPen,
   PenLine,
   Sparkles,
@@ -99,7 +100,7 @@ export const encounter = {
 };
 
 export const sitePaths = [
-  { href: "/rubrica/pensieri", label: "Pensieri", icon: Sparkles },
+  { href: "/articoli", label: "Articoli", icon: Newspaper },
   { href: "/medicina", label: "Medicina", icon: Stethoscope },
   { href: "/medicina/mappa", label: "Mappa delle voci", icon: MapPinned },
   { href: "/chi-sono", label: "Chi sono", icon: Users },
