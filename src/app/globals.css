@@ -125,49 +125,9 @@ body {
   margin: 0.35rem 0;
 }
 
-/* Wrapper posizionato da MapLibre via transform inline: NON deve avere transizioni
-   su transform, altrimenti ogni pan/zoom animerebbe in ritardo oltre 100 marker. */
-.medical-map-pin {
-  width: 20px;
-  height: 20px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-}
-
-/* Il "pallino" visivo è un elemento interno, libero di animarsi senza
-   interferire con il transform che MapLibre usa per posizionare il marker. */
-.medical-map-pin-dot {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border: 2.5px solid #fffcf8;
-  border-radius: 9999px;
-  background: var(--accent);
-  box-shadow: 0 2px 8px rgba(194, 65, 12, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.12);
-  transform-origin: center center;
-  transition:
-    transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    background-color 200ms ease,
-    box-shadow 200ms ease;
-}
-
-.medical-map-pin:hover .medical-map-pin-dot {
-  transform: scale(1.3);
-  box-shadow: 0 4px 14px rgba(194, 65, 12, 0.5), 0 0 0 3px rgba(253, 186, 116, 0.45);
-}
-
-.medical-map-pin[data-active="true"] {
-  z-index: 30 !important;
-}
-
-.medical-map-pin[data-active="true"] .medical-map-pin-dot {
-  background: var(--accent-deep);
-  transform: scale(1.5);
-  box-shadow: 0 0 0 4px rgba(194, 65, 12, 0.35), 0 6px 18px rgba(42, 24, 16, 0.5);
-}
-
+/* I pin della mappa sono un layer vettoriale GeoJSON renderizzato su GPU
+   (vedi medical-voices-map.tsx): niente più elementi DOM da riposizionare a
+   ogni frame di pan/zoom. Restano solo gli stili della popup. */
 .medical-map-popup .maplibregl-popup-content {
   border-radius: 1rem;
   padding: 0.75rem 1rem;
@@ -175,8 +135,7 @@ body {
   font-size: 0.8125rem;
   line-height: 1.4;
   color: var(--ink);
-  background: rgba(255, 252, 248, 0.95);
-  backdrop-filter: blur(12px);
+  background: rgba(255, 252, 248, 0.97);
   box-shadow: 0 10px 25px -5px rgba(28, 20, 16, 0.18), 0 8px 10px -6px rgba(28, 20, 16, 0.1);
   border: 1px solid var(--line);
 }
@@ -192,4 +151,33 @@ body {
 
 .medical-map-popup .maplibregl-popup-tip {
   border-top-color: var(--line);
+}
+
+/* --- Pagina Mappa delle voci: layout "app" a tutta pagina --- */
+
+/* Il pannello è un bottom sheet su mobile (scostato via --sheet-y) e una
+   colonna ancorata su desktop, dove il transform non serve e va azzerato. */
+.medical-sheet {
+  transform: translateY(var(--sheet-y, 0px));
+  transition: transform 300ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.medical-sheet[data-dragging="true"] {
+  transition: none;
+}
+
+@media (min-width: 640px) {
+  .medical-sheet {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Su mobile il bottom sheet copre la fascia bassa della mappa: alziamo zoom e
+   attribuzione di MapLibre per non lasciarli sotto il foglio. */
+@media (max-width: 639px) {
+  .medical-map .maplibregl-ctrl-bottom-right,
+  .medical-map .maplibregl-ctrl-bottom-left {
+    bottom: 10.5rem;
+  }
 }

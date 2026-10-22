@@ -3,16 +3,24 @@
 import { useEffect, useRef } from "react";
 import {
   Map as MapLibreMap,
-  Marker,
   NavigationControl,
   Popup,
   setWorkerUrl,
+  type GeoJSONSource,
   type Map as MapLibreMapType,
 } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+import type { FeatureCollection, Point } from "geojson";
 import type { MedicalVoice } from "@/lib/medical-voices";
 
-const STYLE_URL = "https://tiles.openfreemap.org/styles/liberty";
+// Basemap CARTO Positron: stile vettoriale leggero (55 layer, senza 3D né rilievo
+// raster) invece di OpenFreeMap Liberty (111 layer). Resta MapLibre: cambia solo
+// la sorgente dello stile.
+const STYLE_URL = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
+
+const SOURCE_ID = "medical-voices";
+const CIRCLE_LAYER_ID = "medical-voices-circles";
+const HALO_LAYER_ID = "medical-voices-halo";
 
 type MedicalVoicesMapProps = {
   voices: MedicalVoice[];
@@ -21,18 +29,54 @@ type MedicalVoicesMapProps = {
   resetViewTrigger?: number;
 };
 
+type VoiceProperties = {
+  id: string;
+  name: string;
+  institution: string;
+  city: string;
+};
+
+/**
+ * I ~110 pin sono disegnati come un unico layer vettoriale su GPU invece che come
+ * altrettanti elementi DOM: MapLibre riscriveva il transform di ogni marker a ogni
+ * frame di pan/zoom, causando gli scatti su mobile.
+ */
+function toFeatureCollection(voices: MedicalVoice[]): FeatureCollection<Point, VoiceProperties> {
+  return {
+    type: "FeatureCollection",
+    features: voices.map((voice) => ({
+      type: "Feature",
+      id: voice.id,
+      properties: {
+        id: voice.id,
+        name: voice.name,
+        institution: voice.institution,
+        city: voice.city,
+      },
+      geometry: { type: "Point", coordinates: [voice.lng, voice.lat] },
+    })),
+  };
+}
+
 export function MedicalVoicesMap({ voices, selectedId, onSelect, resetViewTrigger }: MedicalVoicesMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMapType | null>(null);
-  const markersRef = useRef<Map<string, { marker: Marker; element: HTMLButtonElement }>>(new Map());
+  const readyRef = useRef(false);
   const popupRef = useRef<Popup | null>(null);
   const openPopupIdRef = useRef<string | null>(null);
+  const hoveredIdRef = useRef<string | null>(null);
+  const activeIdRef = useRef<string | null>(null);
   const onSelectRef = useRef(onSelect);
+  const voicesRef = useRef(voices);
   const selectedIdRef = useRef(selectedId);
 
   useEffect(() => {
     onSelectRef.current = onSelect;
   }, [onSelect]);
+
+  useEffect(() => {
+    voicesRef.current = voices;
+  }, [voices]);
 
   useEffect(() => {
     selectedIdRef.current = selectedId;
@@ -57,21 +101,148 @@ export function MedicalVoicesMap({ voices, selectedId, onSelect, resetViewTrigge
     // In basso a destra: in alto finirebbero sotto l'header fisso del sito durante lo scroll.
     map.addControl(new NavigationControl({ showCompass: false }), "bottom-right");
     mapRef.current = map;
-    const markers = markersRef.current;
 
     const resizeObserver = new ResizeObserver(() => {
       map.resize();
     });
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
+    resizeObserver.observe(containerRef.current);
+
+    // Popup condivisa e creata solo al primo click: evita di costruire 100+ nodi
+    // che spesso non vengono mai aperti.
+    const openPopup = (voice: MedicalVoice) => {
+      if (!popupRef.current) {
+        popupRef.current = new Popup({
+          offset: 18,
+          closeButton: false,
+          maxWidth: "240px",
+          className: "medical-map-popup",
+        });
+      }
+
+      // Click sullo stesso pin = chiude (come il comportamento nativo di MapLibre).
+      if (openPopupIdRef.current === voice.id) {
+        popupRef.current.remove();
+        openPopupIdRef.current = null;
+        return;
+      }
+
+      popupRef.current
+        .setLngLat([voice.lng, voice.lat])
+        .setHTML(
+          `<strong>${escapeHtml(voice.name)}</strong><br/><span>${escapeHtml(voice.institution)} · ${escapeHtml(voice.city)}</span>`,
+        )
+        .addTo(map);
+      openPopupIdRef.current = voice.id;
+    };
+
+    const clearHover = () => {
+      const id = hoveredIdRef.current;
+      if (id !== null) {
+        map.setFeatureState({ source: SOURCE_ID, id }, { hover: false });
+        hoveredIdRef.current = null;
+      }
+    };
+
+    const handleLoad = () => {
+      map.addSource(SOURCE_ID, {
+        type: "geojson",
+        data: toFeatureCollection(voicesRef.current),
+        // Rende `feature.id` uguale a `properties.id`, requisito per il feature-state.
+        promoteId: "id",
+      });
+
+      // Alone del pin attivo: raggio 0 quando nessun pin è selezionato.
+      map.addLayer({
+        id: HALO_LAYER_ID,
+        type: "circle",
+        source: SOURCE_ID,
+        paint: {
+          "circle-radius": ["case", ["boolean", ["feature-state", "active"], false], 15, 0],
+          "circle-color": "rgba(194, 65, 12, 0.22)",
+          "circle-blur": 0.5,
+        },
+      });
+
+      map.addLayer({
+        id: CIRCLE_LAYER_ID,
+        type: "circle",
+        source: SOURCE_ID,
+        paint: {
+          "circle-radius": [
+            "case",
+            ["boolean", ["feature-state", "active"], false],
+            9,
+            ["boolean", ["feature-state", "hover"], false],
+            8,
+            6,
+          ],
+          "circle-color": [
+            "case",
+            ["boolean", ["feature-state", "active"], false],
+            "#2a1810",
+            "#c2410c",
+          ],
+          "circle-stroke-width": ["case", ["boolean", ["feature-state", "hover"], false], 3, 2.4],
+          "circle-stroke-color": "#fffcf8",
+        },
+      });
+
+      readyRef.current = true;
+
+      // Un unico handler: se il click cade su un pin lo gestiamo qui, altrimenti
+      // chiudiamo la popup. Così non serve coordinare due listener concorrenti.
+      map.on("click", (event) => {
+        const hit = map.queryRenderedFeatures(event.point, { layers: [CIRCLE_LAYER_ID] })[0];
+        if (hit) {
+          const id = hit.properties?.id as string | undefined;
+          const voice = id ? voicesRef.current.find((item) => item.id === id) : undefined;
+          if (voice) {
+            onSelectRef.current(voice.id);
+            openPopup(voice);
+          }
+          return;
+        }
+
+        popupRef.current?.remove();
+        openPopupIdRef.current = null;
+      });
+
+      map.on("mousemove", CIRCLE_LAYER_ID, (event) => {
+        if (!event.features?.length) return;
+        map.getCanvas().style.cursor = "pointer";
+
+        const id = event.features[0].properties?.id as string | undefined;
+        if (!id || hoveredIdRef.current === id) return;
+
+        clearHover();
+        hoveredIdRef.current = id;
+        map.setFeatureState({ source: SOURCE_ID, id }, { hover: true });
+      });
+
+      map.on("mouseleave", CIRCLE_LAYER_ID, () => {
+        map.getCanvas().style.cursor = "";
+        clearHover();
+      });
+
+      if (selectedIdRef.current) {
+        activeIdRef.current = selectedIdRef.current;
+        map.setFeatureState({ source: SOURCE_ID, id: selectedIdRef.current }, { active: true });
+      }
+    };
+
+    if (map.isStyleLoaded()) {
+      handleLoad();
+    } else {
+      map.once("load", handleLoad);
     }
 
     return () => {
       resizeObserver.disconnect();
-      markers.forEach(({ marker }) => marker.remove());
-      markers.clear();
       popupRef.current?.remove();
       popupRef.current = null;
+      readyRef.current = false;
+      hoveredIdRef.current = null;
+      activeIdRef.current = null;
       map.remove();
       mapRef.current = null;
     };
@@ -81,68 +252,16 @@ export function MedicalVoicesMap({ voices, selectedId, onSelect, resetViewTrigge
     const map = mapRef.current;
     if (!map) return;
 
-    const renderMarkers = () => {
-      const markers = markersRef.current;
-      markers.forEach(({ marker }) => marker.remove());
-      markers.clear();
-      popupRef.current?.remove();
-      openPopupIdRef.current = null;
-
-      voices.forEach((voice) => {
-        const el = document.createElement("button");
-        el.type = "button";
-        el.className = "medical-map-pin";
-        el.setAttribute("aria-label", `${voice.name}, ${voice.city}`);
-        if (voice.id === selectedIdRef.current) {
-          el.dataset.active = "true";
-        }
-        // Il pallino è un figlio: MapLibre scrive il transform sul wrapper per
-        // posizionare il marker, così lo scaling di hover/attivo resta indipendente.
-        const dot = document.createElement("span");
-        dot.className = "medical-map-pin-dot";
-        dot.setAttribute("aria-hidden", "true");
-        el.appendChild(dot);
-        el.addEventListener("click", (event) => {
-          event.stopPropagation();
-          onSelectRef.current(voice.id);
-
-          // La popup è condivisa e creata solo al primo click: evita di costruire
-          // 100+ popup DOM (e relativi nodi) che spesso non vengono mai aperti.
-          if (!popupRef.current) {
-            popupRef.current = new Popup({
-              offset: 18,
-              closeButton: false,
-              maxWidth: "240px",
-              className: "medical-map-popup",
-            });
-            map.on("click", () => {
-              popupRef.current?.remove();
-              openPopupIdRef.current = null;
-            });
-          }
-
-          // Click sullo stesso pin = chiude (come il comportamento nativo di MapLibre).
-          if (openPopupIdRef.current === voice.id) {
-            popupRef.current.remove();
-            openPopupIdRef.current = null;
-            return;
-          }
-
-          popupRef.current
-            .setLngLat([voice.lng, voice.lat])
-            .setHTML(
-              `<strong>${escapeHtml(voice.name)}</strong><br/><span>${escapeHtml(voice.institution)} · ${escapeHtml(voice.city)}</span>`,
-            )
-            .addTo(map);
-          openPopupIdRef.current = voice.id;
-        });
-
-        const marker = new Marker({ element: el, anchor: "bottom" })
-          .setLngLat([voice.lng, voice.lat])
-          .addTo(map);
-
-        markers.set(voice.id, { marker, element: el });
-      });
+    const apply = () => {
+      const source = map.getSource(SOURCE_ID) as GeoJSONSource | undefined;
+      // setData conserva il feature-state delle feature con lo stesso id: spegniamo
+      // l'hover prima di sostituire i dati per non lasciare pin "accesi" a vuoto.
+      if (hoveredIdRef.current !== null) {
+        map.setFeatureState({ source: SOURCE_ID, id: hoveredIdRef.current }, { hover: false });
+        hoveredIdRef.current = null;
+      }
+      map.getCanvas().style.cursor = "";
+      source?.setData(toFeatureCollection(voices));
 
       if (voices.length === 0) return;
 
@@ -162,24 +281,35 @@ export function MedicalVoicesMap({ voices, selectedId, onSelect, resetViewTrigge
       );
     };
 
-    if (map.isStyleLoaded()) {
-      renderMarkers();
+    if (readyRef.current) {
+      apply();
     } else {
-      map.once("load", renderMarkers);
+      map.once("load", apply);
     }
   }, [voices]);
 
   useEffect(() => {
-    markersRef.current.forEach(({ element }, id) => {
-      if (id === selectedId) {
-        element.dataset.active = "true";
-      } else {
-        delete element.dataset.active;
-      }
-    });
-
     const map = mapRef.current;
-    if (!map || !selectedId) return;
+    if (!map) return;
+
+    const applyActive = () => {
+      const previous = activeIdRef.current;
+      if (previous && previous !== selectedId) {
+        map.setFeatureState({ source: SOURCE_ID, id: previous }, { active: false });
+      }
+      activeIdRef.current = selectedId;
+      if (selectedId) {
+        map.setFeatureState({ source: SOURCE_ID, id: selectedId }, { active: true });
+      }
+    };
+
+    if (readyRef.current) {
+      applyActive();
+    } else {
+      map.once("load", applyActive);
+    }
+
+    if (!selectedId) return;
     const voice = voices.find((item) => item.id === selectedId);
     if (!voice) return;
     map.easeTo({
@@ -211,7 +341,7 @@ export function MedicalVoicesMap({ voices, selectedId, onSelect, resetViewTrigge
   }, [resetViewTrigger, voices]);
 
   return (
-    <div className="relative h-full w-full">
+    <div className="medical-map relative h-full w-full">
       <div ref={containerRef} className="h-full w-full" />
     </div>
   );
