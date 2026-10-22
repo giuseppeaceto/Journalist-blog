@@ -4,20 +4,17 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { Search, X } from "lucide-react";
 
-type Filters = { q?: string; cat?: string; tag?: string };
-
-/** Costruisce l'URL dell'archivio preservando categoria e tag attivi. */
-function buildHref(query: string, filters: Filters) {
+/** Costruisce l'URL dell'archivio preservando la categoria attiva. */
+function buildHref(query: string, cat?: string) {
   const params = new URLSearchParams();
   const trimmed = query.trim();
   if (trimmed) params.set("q", trimmed);
-  if (filters.cat) params.set("cat", filters.cat);
-  if (filters.tag) params.set("tag", filters.tag);
+  if (cat) params.set("cat", cat);
   const search = params.toString();
   return search ? `/articoli?${search}` : "/articoli";
 }
 
-export function ArticleSearch({ query, cat, tag }: { query?: string; cat?: string; tag?: string }) {
+export function ArticleSearch({ query, cat }: { query?: string; cat?: string }) {
   const router = useRouter();
   const [value, setValue] = useState(query ?? "");
   const [isPending, startTransition] = useTransition();
@@ -35,17 +32,17 @@ export function ArticleSearch({ query, cat, tag }: { query?: string; cat?: strin
 
     const timer = setTimeout(() => {
       startTransition(() => {
-        router.replace(buildHref(value, { cat, tag }), { scroll: false });
+        router.replace(buildHref(value, cat), { scroll: false });
       });
     }, 350);
 
     return () => clearTimeout(timer);
-  }, [value, query, cat, tag, router]);
+  }, [value, query, cat, router]);
 
   const submit = (event: React.FormEvent) => {
     event.preventDefault();
     startTransition(() => {
-      router.replace(buildHref(value, { cat, tag }), { scroll: false });
+      router.replace(buildHref(value, cat), { scroll: false });
     });
   };
 
