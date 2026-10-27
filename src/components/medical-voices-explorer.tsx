@@ -19,6 +19,7 @@ import {
   X,
 } from "lucide-react";
 import { specialties } from "@/lib/specialties";
+import { specialtyIcons } from "@/lib/site-content";
 import {
   filterMedicalVoices,
   type MedicalVoice,
@@ -288,23 +289,27 @@ export function MedicalVoicesExplorer({ voices }: MedicalVoicesExplorerProps) {
                 >
                   Tutte
                 </button>
-                {specialties.map((item) => (
-                  <button
-                    key={item.slug}
-                    type="button"
-                    onClick={() => {
-                      setSpecialty(item.slug);
-                      setCardDismissed(false);
-                    }}
-                    className={`rounded-full px-3 py-1 font-medium transition ${
-                      specialty === item.slug
-                        ? "bg-accent text-white shadow-xs"
-                        : "border border-line/60 bg-paper/80 text-ink/80 hover:bg-white"
-                    }`}
-                  >
-                    {item.name}
-                  </button>
-                ))}
+                {specialties.map((item) => {
+                  const Icon = specialtyIcons[item.slug] ?? Sparkles;
+                  return (
+                    <button
+                      key={item.slug}
+                      type="button"
+                      onClick={() => {
+                        setSpecialty(item.slug);
+                        setCardDismissed(false);
+                      }}
+                      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-medium transition ${
+                        specialty === item.slug
+                          ? "bg-accent text-white shadow-xs"
+                          : "border border-line/60 bg-paper/80 text-ink/80 hover:bg-white"
+                      }`}
+                    >
+                      <Icon className="size-3.5" aria-hidden />
+                      {item.name}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 

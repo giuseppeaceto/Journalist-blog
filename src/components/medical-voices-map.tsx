@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Map as MapLibreMap,
   NavigationControl,
@@ -11,6 +11,8 @@ import {
 } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { FeatureCollection, Point } from "geojson";
+import { Sparkles } from "lucide-react";
+import { specialtyIcons } from "@/lib/site-content";
 import type { MedicalVoice } from "@/lib/medical-voices";
 
 // Basemap CARTO Positron: stile vettoriale leggero (55 layer, senza 3D né rilievo
@@ -82,6 +84,32 @@ export function MedicalVoicesMap({ voices, selectedId, onSelect, resetViewTrigge
     selectedIdRef.current = selectedId;
   }, [selectedId]);
 
+  // Icona della specialità mostrata solo sul pin attivo: un unico elemento DOM
+  // proiettato sulla mappa, quindi nessun impatto sulle performance dei pin GPU.
+  const selectedVoice = voices.find((voice) => voice.id === selectedId) ?? null;
+  const ActiveIcon = selectedVoice
+    ? specialtyIcons[selectedVoice.specialtySlugs[0]] ?? Sparkles
+    : null;
+  const activeIconRef = useRef<HTMLDivElement>(null);
+  const [mapReady, setMapReady] = useState(false);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    const element = activeIconRef.current;
+    if (!map || !element || !selectedVoice) return;
+
+    const place = () => {
+      const point = map.project([selectedVoice.lng, selectedVoice.lat]);
+      element.style.transform = `translate3d(${point.x}px, ${point.y}px, 0)`;
+    };
+
+    place();
+    map.on("move", place);
+    return () => {
+      map.off("move", place);
+    };
+  }, [selectedVoice, mapReady]);
+
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
@@ -101,6 +129,7 @@ export function MedicalVoicesMap({ voices, selectedId, onSelect, resetViewTrigge
     // In basso a destra: in alto finirebbero sotto l'header fisso del sito durante lo scroll.
     map.addControl(new NavigationControl({ showCompass: false }), "bottom-right");
     mapRef.current = map;
+    setMapReady(true);
 
     const resizeObserver = new ResizeObserver(() => {
       map.resize();
@@ -112,7 +141,7 @@ export function MedicalVoicesMap({ voices, selectedId, onSelect, resetViewTrigge
     const openPopup = (voice: MedicalVoice) => {
       if (!popupRef.current) {
         popupRef.current = new Popup({
-          offset: 18,
+          offset: 30,
           closeButton: false,
           maxWidth: "240px",
           className: "medical-map-popup",
@@ -157,12 +186,14 @@ export function MedicalVoicesMap({ voices, selectedId, onSelect, resetViewTrigge
         type: "circle",
         source: SOURCE_ID,
         paint: {
-          "circle-radius": ["case", ["boolean", ["feature-state", "active"], false], 15, 0],
+          "circle-radius": ["case", ["boolean", ["feature-state", "active"], false], 34, 0],
           "circle-color": "rgba(194, 65, 12, 0.22)",
           "circle-blur": 0.5,
         },
       });
 
+      // Pin base (non selezionati): il pin attivo è disegnato come badge DOM sopra
+      // la mappa, così non viene mai coperto dagli altri pin.
       map.addLayer({
         id: CIRCLE_LAYER_ID,
         type: "circle",
@@ -170,18 +201,11 @@ export function MedicalVoicesMap({ voices, selectedId, onSelect, resetViewTrigge
         paint: {
           "circle-radius": [
             "case",
-            ["boolean", ["feature-state", "active"], false],
-            9,
             ["boolean", ["feature-state", "hover"], false],
             8,
             6,
           ],
-          "circle-color": [
-            "case",
-            ["boolean", ["feature-state", "active"], false],
-            "#2a1810",
-            "#c2410c",
-          ],
+          "circle-color": "#c2410c",
           "circle-stroke-width": ["case", ["boolean", ["feature-state", "hover"], false], 3, 2.4],
           "circle-stroke-color": "#fffcf8",
         },
@@ -245,6 +269,7 @@ export function MedicalVoicesMap({ voices, selectedId, onSelect, resetViewTrigge
       activeIdRef.current = null;
       map.remove();
       mapRef.current = null;
+      setMapReady(false);
     };
   }, []);
 
@@ -343,6 +368,19 @@ export function MedicalVoicesMap({ voices, selectedId, onSelect, resetViewTrigge
   return (
     <div className="medical-map relative h-full w-full">
       <div ref={containerRef} className="h-full w-full" />
+
+      {/* Pin attivo: badge sopra la mappa, sempre in primo piano */}
+      {selectedVoice && ActiveIcon && (
+        <div
+          ref={activeIconRef}
+          style={{ transform: "translate3d(-9999px, -9999px, 0)" }}
+          className="pointer-events-none absolute left-0 top-0 z-10"
+        >
+          <span className="flex size-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-accent text-white ring-4 ring-white shadow-lg">
+            <ActiveIcon className="size-6" aria-hidden />
+          </span>
+        </div>
+      )}
     </div>
   );
 }

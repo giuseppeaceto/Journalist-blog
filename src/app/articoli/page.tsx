@@ -66,8 +66,8 @@ export default async function ArticoliPage({ searchParams }: Props) {
   const activeCount = [query, category].filter(Boolean).length;
 
   return (
-    <div className="mx-auto max-w-[96rem] px-3 pb-10 pt-28 sm:px-5 sm:pb-14 sm:pt-32">
-      <div className="lg:grid lg:grid-cols-[20rem_minmax(0,1fr)] lg:items-start lg:gap-10 xl:grid-cols-[22rem_minmax(0,1fr)] xl:gap-12">
+    <div className="px-3 pb-10 pt-28 sm:px-5 sm:pb-14 sm:pt-32">
+      <div className="lg:grid lg:grid-cols-[26.75rem_minmax(0,1fr)] lg:items-start lg:gap-10">
         <div className="lg:col-start-2 lg:row-start-1">
           <BackButton href="/" label="Indietro" />
           <p className="text-xs font-medium uppercase tracking-[0.22em] text-accent">Archivio</p>

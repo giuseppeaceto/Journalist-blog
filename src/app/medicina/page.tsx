@@ -23,7 +23,7 @@ export default function MedicinaPage() {
 
       <section className="mt-10">
         <h2 className="font-display text-3xl font-semibold tracking-tight">Specialità</h2>
-        <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+        <ul className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {specialties.map((item) => {
             const Icon = specialtyIcons[item.slug] ?? Sparkles;
             return (
