@@ -4,9 +4,56 @@ import { ArrowUpRight } from "lucide-react";
 import { formatDate } from "@/lib/format";
 import type { Post } from "@/lib/types";
 
-export function PostCard({ post, featured = false }: { post: Post; featured?: boolean }) {
+export function PostCard({
+  post,
+  featured = false,
+  layout = "card",
+}: {
+  post: Post;
+  featured?: boolean;
+  layout?: "card" | "row";
+}) {
   const category = post.categories[0];
   const categoryName = category?.slug === "pensieri" ? "Diario" : category?.name;
+
+  if (layout === "row") {
+    return (
+      <article className="group flex gap-4 rounded-2xl bg-card/70 p-2.5 ring-1 ring-line/80 transition hover:ring-accent/40 sm:gap-5 sm:p-3">
+        <Link
+          href={`/articolo/${post.slug}`}
+          className="relative block w-24 shrink-0 overflow-hidden rounded-xl bg-line sm:w-36 lg:w-44"
+        >
+          {post.image ? (
+            <Image
+              src={post.image}
+              alt={post.imageAlt}
+              width={400}
+              height={300}
+              className="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+            />
+          ) : (
+            <div className="aspect-[4/3] w-full bg-accent-deep" />
+          )}
+        </Link>
+        <div className="min-w-0 flex-1 py-0.5">
+          <p className="text-xs font-medium uppercase tracking-[0.16em] text-accent">
+            {categoryName ?? "Articolo"}
+            <span className="text-muted"> · {formatDate(post.date)}</span>
+          </p>
+          <h2 className="mt-1.5 font-display text-lg font-semibold leading-snug tracking-tight text-ink sm:text-xl">
+            <Link href={`/articolo/${post.slug}`} className="hover:text-accent">
+              {post.title}
+            </Link>
+          </h2>
+          {post.excerpt ? (
+            <p className="mt-1.5 hidden text-sm leading-relaxed text-muted sm:line-clamp-2">
+              {post.excerpt}
+            </p>
+          ) : null}
+        </div>
+      </article>
+    );
+  }
 
   return (
     <article

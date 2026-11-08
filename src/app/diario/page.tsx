@@ -44,9 +44,9 @@ export default async function DiarioPage({ searchParams }: Props) {
       </p>
 
       {result.posts.length > 0 ? (
-        <div className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid gap-3">
           {result.posts.map((post) => (
-            <PostCard key={post.id} post={post} />
+            <PostCard key={post.id} post={post} layout="row" />
           ))}
         </div>
       ) : (
