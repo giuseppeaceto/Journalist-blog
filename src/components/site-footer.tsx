@@ -16,8 +16,8 @@ export function SiteFooter() {
           <p className="text-xs uppercase tracking-[0.18em] text-white/45">Rubriche</p>
           <ul className="mt-3 space-y-1.5 text-sm text-white/75">
             <li>
-              <Link href="/rubrica/pensieri" className="hover:text-glow">
-                Pensieri
+              <Link href="/diario" className="hover:text-glow">
+                Diario
               </Link>
             </li>
             <li>
@@ -35,16 +35,13 @@ export function SiteFooter() {
                 Mappa delle voci
               </Link>
             </li>
-            {beyondRubrics
-              .filter((item) => item.slug !== "pensieri")
-              .slice(0, 4)
-              .map((item) => (
-                <li key={item.slug}>
-                  <Link href={`/rubrica/${item.slug}`} className="hover:text-glow">
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
+            {beyondRubrics.slice(0, 4).map((item) => (
+              <li key={item.slug}>
+                <Link href={`/rubrica/${item.slug}`} className="hover:text-glow">
+                  {item.name}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
         <div>

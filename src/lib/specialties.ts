@@ -81,7 +81,6 @@ export const medicineRubrics = [
 ] as const;
 
 export const beyondRubrics = [
-  { slug: "pensieri", name: "Pensieri" },
   { slug: "societa", name: "Società" },
   { slug: "cultura", name: "Cultura" },
   { slug: "eventi", name: "Eventi" },

@@ -79,19 +79,6 @@ export const registry = {
   imageAlt: "Tesserino dell’Albo dei Giornalisti Pubblicisti",
 };
 
-export const testimonials = [
-  {
-    quote:
-      "Ogni intervista con Nadia è un viaggio, un’opportunità di scoprire nuove prospettive e approfondire temi con una visione fresca e coinvolgente.",
-    attribution: "Davide – Lettore",
-  },
-  {
-    quote:
-      "Leggere i suoi articoli è come essere trasportati in un altro mondo: ricco di sfumature, verità e riflessioni.",
-    attribution: "Rebecca – Lettrice",
-  },
-] as const;
-
 export const encounter = {
   title: "Ispirazione e conoscenza: una lezione da Piero Angela",
   text: "Quella volta che incontrai Piero Angela ho capito quanto sia importante l’impegno nella diffusione della conoscenza. La sua curiosità e il rispetto per la scienza mi hanno ispirata a credere ancora di più nel potere delle parole. La verità, disse, è un bene prezioso che va custodito e condiviso: ogni domanda è il primo passo verso una comprensione più profonda.",
@@ -103,6 +90,7 @@ export const sitePaths = [
   { href: "/articoli", label: "Articoli", icon: Newspaper },
   { href: "/medicina", label: "Medicina", icon: Stethoscope },
   { href: "/medicina/mappa", label: "Mappa delle voci", icon: MapPinned },
+  { href: "/diario", label: "Diario", icon: NotebookPen },
   { href: "/chi-sono", label: "Chi sono", icon: Users },
   { href: "/contatti", label: "Contatti", icon: Mic2 },
 ] as const;

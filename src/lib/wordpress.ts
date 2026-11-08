@@ -141,6 +141,7 @@ export type PostQuery = {
   page?: number;
   perPage?: number;
   categories?: number;
+  categoriesExclude?: number;
   tags?: number;
   search?: string;
   exclude?: number;
@@ -152,6 +153,7 @@ export async function getPosts(query: PostQuery = {}) {
     page: query.page ?? 1,
     per_page: query.perPage ?? 10,
     categories: query.categories,
+    categories_exclude: query.categoriesExclude,
     tags: query.tags,
     search: query.search,
     exclude: query.exclude,

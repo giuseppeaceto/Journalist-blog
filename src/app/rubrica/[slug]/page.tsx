@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { BackButton } from "@/components/back-button";
 import { Pagination } from "@/components/pagination";
 import { PostCard } from "@/components/post-card";
@@ -14,6 +14,7 @@ export const revalidate = 300;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
+  if (slug === "pensieri") return { title: "Diario" };
   const result = await getPostsByCategorySlug(slug, 1, 1);
   if (!result) return { title: "Rubrica" };
   return {
@@ -26,6 +27,9 @@ export default async function RubricaPage({ params, searchParams }: Props) {
   const { slug } = await params;
   const { page: pageParam } = await searchParams;
   const page = Math.max(1, Number(pageParam) || 1);
+  if (slug === "pensieri") {
+    permanentRedirect(page > 1 ? `/diario?page=${page}` : "/diario");
+  }
   const result = await getPostsByCategorySlug(slug, page, 12);
   if (!result) notFound();
 

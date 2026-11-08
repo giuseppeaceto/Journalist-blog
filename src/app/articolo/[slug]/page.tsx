@@ -41,8 +41,11 @@ export default async function ArticlePage({ params }: Props) {
       <BackButton href="/" label="Indietro" />
       <p className="text-xs uppercase tracking-[0.18em] text-accent">
         {category ? (
-          <Link href={`/rubrica/${category.slug}`} className="hover:underline">
-            {category.name}
+          <Link
+            href={category.slug === "pensieri" ? "/diario" : `/rubrica/${category.slug}`}
+            className="hover:underline"
+          >
+            {category.slug === "pensieri" ? "Diario" : category.name}
           </Link>
         ) : (
           "Articolo"

@@ -6,6 +6,7 @@ import type { Post } from "@/lib/types";
 
 export function PostCard({ post, featured = false }: { post: Post; featured?: boolean }) {
   const category = post.categories[0];
+  const categoryName = category?.slug === "pensieri" ? "Diario" : category?.name;
 
   return (
     <article
@@ -33,7 +34,7 @@ export function PostCard({ post, featured = false }: { post: Post; featured?: bo
       </Link>
       <div className={featured ? "" : "px-1 pb-2 pt-3"}>
         <p className="text-xs font-medium uppercase tracking-[0.16em] text-accent">
-          {category?.name ?? "Articolo"}
+          {categoryName ?? "Articolo"}
           <span className="text-muted"> · {formatDate(post.date)}</span>
         </p>
         <h2

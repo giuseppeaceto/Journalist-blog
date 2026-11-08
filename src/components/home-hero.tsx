@@ -17,19 +17,18 @@ export function HomeHero() {
       <div className="relative mx-auto grid max-w-6xl items-end gap-6 px-5 pb-0 pt-36 sm:pt-40 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8 lg:pt-28">
         <div className="relative z-20 max-w-xl pb-10 sm:pb-14 lg:pb-16">
           <h1 className="animate-rise font-display text-4xl font-semibold leading-[0.92] tracking-tight text-ink sm:text-5xl xl:text-6xl">
-            Voci dal Mondo
+            Parliamone
           </h1>
           <p className="animate-rise-delay mt-4 max-w-md text-base leading-relaxed text-ink/75 sm:text-lg">
-            Dai progressi della medicina alle storie di vita quotidiana: incontri con specialisti,
-            approfondimenti clinici e racconti sul nostro presente. Il rigore della divulgazione
-            unito alla forza delle parole.
+            Racconto persone, idee e luoghi attraverso interviste e reportage. Dalla medicina alla
+            cultura, dalla società ai viaggi, con curiosità, ascolto e rigore giornalistico.
           </p>
           <div className="animate-rise-delay mt-6 flex flex-wrap gap-3">
             <Link
-              href="/rubrica/pensieri"
+              href="/articoli"
               className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-white transition hover:bg-accent-deep"
             >
-              Leggi i pensieri
+              Leggi tutti gli articoli
               <ArrowRight className="size-4" />
             </Link>
             <Link
