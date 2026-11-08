@@ -7,7 +7,7 @@ import { HomeMedicineFocus } from "@/components/home-medicine-focus";
 import { HomeSectionNav } from "@/components/home-section-nav";
 import { SpotlightFeatures } from "@/components/spotlight-features";
 import { encounter } from "@/lib/site-content";
-import { getCategoryBySlug, getPosts, getPostsByCategorySlug } from "@/lib/wordpress";
+import { getCategoryBySlug, getPosts } from "@/lib/wordpress";
 
 export const revalidate = 300;
 
@@ -19,12 +19,9 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   const thoughtsCategory = await getCategoryBySlug("pensieri");
-  const [latest, medicineResult] = await Promise.all([
-    getPosts({ perPage: 6, categoriesExclude: thoughtsCategory?.id }),
-    getPostsByCategorySlug("medicina", 1, 1),
-  ]);
+  const latest = await getPosts({ perPage: 6, categoriesExclude: thoughtsCategory?.id });
 
-  const focusStory = medicineResult?.posts[0] ?? latest.posts[0];
+  const focusStory = latest.posts[0];
 
   return (
     <div>
