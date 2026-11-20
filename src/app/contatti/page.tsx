@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function ContattiPage() {
   return (
     <div className="mx-auto max-w-3xl px-5 pb-12 pt-28 sm:pb-16 sm:pt-32">
-      <span className="inline-flex size-11 items-center justify-center rounded-2xl bg-glow/60 text-accent">
+      <span className="inline-flex size-11 items-center justify-center rounded-2xl bg-accent/15 text-accent">
         <Mail className="size-5" aria-hidden />
       </span>
       <p className="mt-5 text-xs font-medium uppercase tracking-[0.22em] text-accent">Contattami</p>

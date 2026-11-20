@@ -4,7 +4,7 @@ import { ArrowRight, MapPinned } from "lucide-react";
 
 export function HomeMedicineFocus() {
   return (
-    <section className="mx-auto max-w-6xl px-5 pt-2 sm:pt-4">
+    <section className="mx-auto max-w-6xl px-5 py-4 sm:py-6">
       <div className="grid overflow-hidden rounded-3xl border border-line/80 bg-card/80 shadow-sm lg:grid-cols-[230px_minmax(0,1fr)_300px]">
         <div className="relative aspect-[16/9] bg-glow/30 lg:aspect-auto lg:min-h-36">
           <Image
@@ -35,7 +35,7 @@ export function HomeMedicineFocus() {
           href="/medicina/mappa"
           className="group flex items-center gap-4 border-t border-line px-5 py-5 transition hover:bg-white/70 sm:px-7 lg:border-l-0 lg:border-t-0"
         >
-          <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-2xl bg-glow/50 text-accent">
+          <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-2xl bg-accent/15 text-accent">
             <MapPinned className="size-7" aria-hidden />
           </span>
           <span className="min-w-0">

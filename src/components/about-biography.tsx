@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { BackButton } from "@/components/back-button";
 
 const sections = [
   { id: "percorso", number: "01", title: "Il mio percorso" },
@@ -12,36 +13,39 @@ const sections = [
 
 export function AboutBiography({ title }: { title: string }) {
   return (
-    <>
-      <section className="bg-accent-deep pt-28 text-white sm:pt-32">
-        <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 pb-12 pt-8 sm:pb-16 sm:pt-10 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-16">
-          <div>
-            <p className="text-xs font-medium uppercase tracking-[0.22em] text-glow">
-              La giornalista · Trento
-            </p>
-            <h1 className="mt-3 max-w-3xl font-display text-4xl font-semibold leading-tight tracking-tight sm:text-6xl">
-              {title}
-            </h1>
-            <p className="mt-7 max-w-3xl font-display text-3xl leading-tight tracking-tight text-white/90 sm:text-4xl xl:text-[2.75rem]">
-              Ci sono persone che attraversano la vita cercando risposte. Io ho sempre preferito
-              farmi domande.
-            </p>
-          </div>
+    <div className="mx-auto max-w-6xl px-5 pb-16 pt-28 sm:pb-20 sm:pt-32">
+      {/* Intestazione editoriale d'autore su fondo carta */}
+      <div className="grid items-center gap-8 pb-12 sm:pb-16 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-16">
+        <div>
+          <BackButton href="/" label="Indietro" />
+          <p className="mt-3 text-xs font-semibold uppercase tracking-[0.22em] text-accent">
+            La giornalista · Trento
+          </p>
+          <h1 className="mt-3 font-display text-4xl font-semibold tracking-tight text-ink sm:text-6xl">
+            {title}
+          </h1>
+          <blockquote className="mt-6 border-l-2 border-accent pl-5 font-display text-2xl italic leading-snug text-ink/90 sm:text-3xl xl:text-[2.25rem]">
+            «Ci sono persone che attraversano la vita cercando risposte. Io ho sempre preferito
+            farmi domande.»
+          </blockquote>
+        </div>
 
-          <div className="relative mx-auto aspect-[3/4] w-full max-w-[340px] overflow-hidden rounded-[2rem] border border-white/20 bg-glow/20 lg:mx-0 lg:ml-auto">
+        <div className="relative mx-auto flex w-full max-w-[340px] justify-center lg:mx-0 lg:ml-auto">
+          <div className="relative size-64 overflow-hidden rounded-full border border-line/80 bg-hero/15 ring-4 ring-white shadow-lg sm:size-72 lg:size-80">
             <Image
-              src="/nadia-hero.jpg"
+              src="/nadia-cutout.png"
               alt="Nadia Clementi, giornalista pubblicista freelance"
               fill
-              preload
-              sizes="(max-width: 1024px) 85vw, 340px"
-              className="object-cover object-top"
+              priority
+              sizes="(max-width: 640px) 256px, (max-width: 1024px) 288px, 320px"
+              className="size-full object-cover object-top transition duration-500 hover:scale-105"
             />
           </div>
         </div>
-      </section>
+      </div>
 
-      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:py-16 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-16 lg:py-20">
+      {/* Corpo biografia con indice ancorato */}
+      <div className="border-t border-line/80 pt-10 sm:pt-14 lg:grid lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-16">
         <aside className="lg:sticky lg:top-28 lg:h-fit">
           <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-muted">
             In questa pagina
@@ -204,6 +208,6 @@ export function AboutBiography({ title }: { title: string }) {
           </section>
         </article>
       </div>
-    </>
+    </div>
   );
 }

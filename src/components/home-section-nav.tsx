@@ -25,7 +25,7 @@ export function HomeSectionNav() {
   return (
     <nav
       aria-label="Esplora le sezioni"
-      className="mx-auto max-w-6xl px-5 pt-5 sm:pt-7"
+      className="hidden sm:block mx-auto max-w-6xl px-5 pt-5 sm:pt-7"
     >
       <ul className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-8">
         {destinations.map(({ label, href, icon: Icon }) => (

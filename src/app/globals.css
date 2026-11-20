@@ -5,11 +5,11 @@
   --ink: #1c1410;
   --muted: #6b5e52;
   --line: #e4d7c8;
-  --accent: #c2410c;
-  --accent-deep: #2a1810;
+  --accent: #941f5a;
+  --accent-deep: #220916;
   --card: #fffcf8;
-  --glow: #fdba74;
-  --hero: #f89709;
+  --glow: #8d2447;
+  --hero: #7f062f;
 }
 
 @theme inline {
@@ -29,11 +29,9 @@
 body {
   background-color: var(--paper);
   background-image:
-    radial-gradient(
-      ellipse 90% 42% at 50% 0%,
+    radial-gradient(ellipse 90% 42% at 50% 0%,
       color-mix(in oklab, var(--glow) 28%, transparent),
-      transparent 72%
-    );
+      transparent 72%);
   background-repeat: no-repeat;
   background-attachment: scroll;
   color: var(--ink);
@@ -45,6 +43,7 @@ body {
     opacity: 0;
     transform: translateY(18px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -52,10 +51,12 @@ body {
 }
 
 @keyframes float-soft {
+
   0%,
   100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-8px);
   }
@@ -176,6 +177,7 @@ body {
 /* Su mobile il bottom sheet copre la fascia bassa della mappa: alziamo zoom e
    attribuzione di MapLibre per non lasciarli sotto il foglio. */
 @media (max-width: 639px) {
+
   .medical-map .maplibregl-ctrl-bottom-right,
   .medical-map .maplibregl-ctrl-bottom-left {
     bottom: 10.5rem;

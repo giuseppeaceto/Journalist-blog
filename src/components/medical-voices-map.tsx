@@ -187,7 +187,7 @@ export function MedicalVoicesMap({ voices, selectedId, onSelect, resetViewTrigge
         source: SOURCE_ID,
         paint: {
           "circle-radius": ["case", ["boolean", ["feature-state", "active"], false], 34, 0],
-          "circle-color": "rgba(194, 65, 12, 0.22)",
+          "circle-color": "rgba(148, 31, 90, 0.22)",
           "circle-blur": 0.5,
         },
       });
@@ -205,7 +205,7 @@ export function MedicalVoicesMap({ voices, selectedId, onSelect, resetViewTrigge
             8,
             6,
           ],
-          "circle-color": "#c2410c",
+          "circle-color": "#941f5a",
           "circle-stroke-width": ["case", ["boolean", ["feature-state", "hover"], false], 3, 2.4],
           "circle-stroke-color": "#fffcf8",
         },
