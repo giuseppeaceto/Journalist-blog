@@ -44,7 +44,7 @@ export function HomeEditorialCard({
                 ? "(max-width: 640px) 38vw, 220px"
                 : "(max-width: 768px) 100vw, 360px"
             }
-            className="object-cover transition duration-500 group-hover:scale-[1.03]"
+            className="object-cover object-top transition duration-500 group-hover:scale-[1.03]"
           />
         ) : Icon ? (
           <span className="absolute inset-0 flex items-center justify-center text-accent">

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { BackButton } from "@/components/back-button";
+import { PressCard3D } from "@/components/press-card-3d";
 
 const sections = [
   { id: "percorso", number: "01", title: "Il mio percorso" },
@@ -94,6 +95,8 @@ export function AboutBiography({ title }: { title: string }) {
                 capacità di osservare il mondo da prospettive diverse.
               </p>
             </div>
+
+            <PressCard3D />
           </section>
 
           <section id="ascolto" className="scroll-mt-28 border-t border-line/80 py-9">

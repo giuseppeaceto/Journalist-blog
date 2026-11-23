@@ -72,11 +72,12 @@ export const award = {
 
 export const registry = {
   title: "Albo Giornalisti Pubblicisti",
-  year: "2025",
+  year: "2014",
   quote: "Nadia sa come trasformare le parole in emozioni, rendendo ogni storia unica e avvincente.",
   attribution: "Carla – Lettrice",
-  image: "/tesserino-albo.jpg",
-  imageAlt: "Tesserino dell’Albo dei Giornalisti Pubblicisti",
+  image: "/tesserino/tesserino-interno.webp",
+  imageCover: "/tesserino/tesserino-copertina.webp",
+  imageAlt: "Tesserino dell’Albo dei Giornalisti Pubblicisti di Trento",
 };
 
 export const encounter = {

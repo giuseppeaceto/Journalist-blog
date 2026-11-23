@@ -24,10 +24,11 @@ export const metadata: Metadata = {
 export default async function DiarioPage({ searchParams }: Props) {
   const { page: pageParam } = await searchParams;
   const page = Math.max(1, Number(pageParam) || 1);
-  const result = await getPostsByCategorySlug("pensieri", page, 10);
+  const isFirstPage = page === 1;
+  const perPage = isFirstPage ? 13 : 12;
+  const result = await getPostsByCategorySlug("pensieri", page, perPage);
   if (!result) notFound();
 
-  const isFirstPage = page === 1;
   const featuredPost = isFirstPage && result.posts.length > 0 ? result.posts[0] : null;
   const remainingPosts = isFirstPage ? result.posts.slice(1) : result.posts;
 
@@ -98,10 +99,10 @@ export default async function DiarioPage({ searchParams }: Props) {
               </h2>
             </div>
           ) : null}
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 sm:gap-5">
             {remainingPosts.map((post) => (
               <div key={post.id} className="h-full">
-                <PostCard post={post} />
+                <PostCard post={post} aspectRatio="square" />
               </div>
             ))}
           </div>

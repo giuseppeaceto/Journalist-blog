@@ -83,7 +83,12 @@ function termsOf(post: WpPost, taxonomy: string): Term[] {
 }
 
 export function cleanContent(html: string) {
-  return sanitizeHtml(html, {
+  // Rimuovi eventuali riferimenti o link locali 'file:///' ereditati da Word/WordPress
+  const safeHtml = html
+    .replace(/\bhref=["']file:\/\/[^"']*["']/gi, 'href="#"')
+    .replace(/\bsrc=["']file:\/\/[^"']*["']/gi, 'src=""');
+
+  return sanitizeHtml(safeHtml, {
     allowedTags: [
       "p",
       "br",
